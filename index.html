@@ -157,8 +157,34 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .card.mythique { border-color: #2D0057; }
-        .card.mythique:hover { box-shadow: 0 10px 30px rgba(45,0,87,0.4); }
+        @keyframes chromatic {
+            0%   { border-color: #ff0000; box-shadow: 0 0 15px #ff000040, inset 0 0 15px #ff000015; }
+            16%  { border-color: #ff8800; box-shadow: 0 0 15px #ff880040, inset 0 0 15px #ff880015; }
+            33%  { border-color: #ffff00; box-shadow: 0 0 15px #ffff0040, inset 0 0 15px #ffff0015; }
+            50%  { border-color: #00ff88; box-shadow: 0 0 15px #00ff8840, inset 0 0 15px #00ff8815; }
+            66%  { border-color: #0088ff; box-shadow: 0 0 15px #0088ff40, inset 0 0 15px #0088ff15; }
+            83%  { border-color: #8800ff; box-shadow: 0 0 15px #8800ff40, inset 0 0 15px #8800ff15; }
+            100% { border-color: #ff0000; box-shadow: 0 0 15px #ff000040, inset 0 0 15px #ff000015; }
+        }
+
+        @keyframes chromatic-text {
+            0%   { color: #ff0000; }
+            16%  { color: #ff8800; }
+            33%  { color: #ffff00; }
+            50%  { color: #00ff88; }
+            66%  { color: #0088ff; }
+            83%  { color: #8800ff; }
+            100% { color: #ff0000; }
+        }
+
+        .card.mythique {
+            border-color: #ff0000;
+            animation: chromatic 4s linear infinite;
+        }
+        .card.mythique:hover {
+            transform: translateY(-5px);
+            animation: chromatic 2s linear infinite;
+        }
         .card.legendaire { border-color: #E07B00; }
         .card.legendaire:hover { box-shadow: 0 10px 30px rgba(224,123,0,0.4); }
         .card.epique { border-color: #8E44AD; }
@@ -192,7 +218,8 @@
             letter-spacing: 1px;
         }
 
-        .card.mythique .card-rarity { color: #bf6fff; }
+        .card.mythique .card-rarity { animation: chromatic-text 4s linear infinite; }
+        .card.mythique .card-name { animation: chromatic-text 4s linear infinite; }
         .card.legendaire .card-rarity { color: #E07B00; }
         .card.epique .card-rarity { color: #8E44AD; }
         .card.rare .card-rarity { color: #27AE60; }
