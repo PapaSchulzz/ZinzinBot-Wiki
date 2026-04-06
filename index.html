@@ -354,11 +354,11 @@
 
 <div class="filters">
     <button class="filter-btn active" onclick="filterCards('all')">Toutes</button>
-    <button class="filter-btn" onclick="filterCards('mythique')">Mythique</button>
-    <button class="filter-btn" onclick="filterCards('legendaire')">Légendaire</button>
-    <button class="filter-btn" onclick="filterCards('epique')">Épique</button>
-    <button class="filter-btn" onclick="filterCards('rare')">Rare</button>
     <button class="filter-btn" onclick="filterCards('commune')">Commune</button>
+    <button class="filter-btn" onclick="filterCards('rare')">Rare</button>
+    <button class="filter-btn" onclick="filterCards('epique')">Épique</button>
+    <button class="filter-btn" onclick="filterCards('legendaire')">Légendaire</button>
+    <button class="filter-btn" onclick="filterCards('mythique')">Mythique</button>
 </div>
 
 <div id="cards-container"></div>
@@ -430,11 +430,11 @@ const CARDS = [
 ];
 
 const RARITIES = [
-    { name: "Mythique", css: "mythique", color: "#2D0057", totalChance: "0.1%" },
-    { name: "Légendaire", css: "legendaire", color: "#E07B00", totalChance: "2.0%" },
-    { name: "Épique", css: "epique", color: "#8E44AD", totalChance: "14.4%" },
-    { name: "Rare", css: "rare", color: "#27AE60", totalChance: "25.0%" },
     { name: "Commune", css: "commune", color: "#5DADE2", totalChance: "58.5%" },
+    { name: "Rare", css: "rare", color: "#27AE60", totalChance: "25.0%" },
+    { name: "Épique", css: "epique", color: "#8E44AD", totalChance: "14.4%" },
+    { name: "Légendaire", css: "legendaire", color: "#E07B00", totalChance: "2.0%" },
+    { name: "Mythique", css: "mythique", color: "#2D0057", totalChance: "0.1%" },
 ];
 
 function renderCards(filter = 'all') {
