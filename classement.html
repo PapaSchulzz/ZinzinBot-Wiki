@@ -147,6 +147,29 @@
             margin-bottom: 10px;
         }
 
+        .podium-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.2);
+            margin-bottom: 10px;
+            object-fit: cover;
+            background: #111;
+        }
+
+        .podium-place:nth-child(2) .podium-avatar {
+            border-color: rgba(241,196,15,0.6);
+            box-shadow: 0 0 15px rgba(241,196,15,0.3);
+        }
+        .podium-place:nth-child(1) .podium-avatar {
+            border-color: rgba(192,192,192,0.6);
+            box-shadow: 0 0 15px rgba(192,192,192,0.3);
+        }
+        .podium-place:nth-child(3) .podium-avatar {
+            border-color: rgba(205,127,50,0.6);
+            box-shadow: 0 0 15px rgba(205,127,50,0.3);
+        }
+
         .podium-block {
             border-radius: 16px 16px 0 0;
             padding: 20px 30px;
@@ -220,6 +243,20 @@
             min-width: 45px;
             text-align: center;
         }
+
+        .lb-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #111;
+        }
+
+        .top-1 .lb-avatar { border-color: rgba(241,196,15,0.5); }
+        .top-2 .lb-avatar { border-color: rgba(192,192,192,0.5); }
+        .top-3 .lb-avatar { border-color: rgba(205,127,50,0.5); }
 
         .lb-info {
             flex: 1;
@@ -400,7 +437,9 @@
             .header h1 { font-size: 2rem; }
             .podium { gap: 10px; }
             .podium-block { min-width: 100px; padding: 15px; }
+            .podium-avatar { width: 48px; height: 48px; }
             .podium-name { font-size: 0.85rem; max-width: 90px; }
+            .lb-avatar { width: 36px; height: 36px; }
             .tips-grid { grid-template-columns: 1fr; }
             .command-box { flex-direction: column; text-align: center; }
         }
@@ -540,6 +579,7 @@ async function loadLeaderboard() {
                 { bg: "rgba(205,127,50,", border: "rgba(205,127,50,0.4)" },
             ];
 
+            const defaultAvatar = "https://cdn.discordapp.com/embed/avatars/0.png";
             podium.innerHTML = podiumOrder.map((p, i) => `
                 <div class="podium-place">
                     <div class="podium-medal">${["🥈","🥇","🥉"][i]}</div>
@@ -548,6 +588,7 @@ async function loadLeaderboard() {
                         border: 2px solid ${colors[i].border};
                         height: ${heights[i]}px;
                     ">
+                        <img class="podium-avatar" src="${p.avatar || defaultAvatar}" alt="${escapeHtml(p.name)}" onerror="this.src='${defaultAvatar}'">
                         <div class="podium-name">${escapeHtml(p.name)}</div>
                         <div class="podium-stats">${p.unique}/${totalCards} uniques</div>
                     </div>
@@ -592,9 +633,11 @@ async function loadLeaderboard() {
                 return `<span class="lb-rarity-tag tag-${r.css}">${finalVal}/${finalMax}</span>`;
             }).join('');
 
+            const defaultAv = "https://cdn.discordapp.com/embed/avatars/0.png";
             return `
                 <div class="leaderboard-entry${topClass}">
                     <div class="lb-rank">${rank}</div>
+                    <img class="lb-avatar" src="${p.avatar || defaultAv}" alt="" onerror="this.src='${defaultAv}'">
                     <div class="lb-info">
                         <div class="lb-name">${escapeHtml(p.name)}</div>
                         <div class="lb-stats">${p.unique}/${totalCards} uniques · ${p.total} cartes au total</div>
