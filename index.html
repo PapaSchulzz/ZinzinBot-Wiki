@@ -323,6 +323,44 @@
             text-decoration: none;
         }
 
+        /* ── Navigation ── */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            padding: 15px 20px;
+            background: rgba(13, 13, 13, 0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link {
+            padding: 8px 24px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            background: transparent;
+            color: #888;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: #f39c12;
+            border-color: #f39c12;
+            color: #000;
+        }
+
         /* ── Responsive ── */
         @media (max-width: 600px) {
             .header h1 { font-size: 2rem; }
@@ -332,6 +370,11 @@
     </style>
 </head>
 <body>
+
+<nav class="navbar">
+    <a href="index.html" class="nav-link active">Collection</a>
+    <a href="classement.html" class="nav-link">Classement</a>
+</nav>
 
 <div class="header">
     <h1>ZinzinBot</h1>

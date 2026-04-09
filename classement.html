@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinzinBot - Classement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* ── Navigation ── */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            padding: 15px 20px;
+            background: rgba(13, 13, 13, 0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link {
+            padding: 8px 24px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            background: transparent;
+            color: #888;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: #f39c12;
+            border-color: #f39c12;
+            color: #000;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(180deg, #1a0a2e 0%, #0d0d0d 100%);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f1c40f, #e67e22, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #888;
+        }
+
+        /* ── Contenu principal ── */
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ── Podium ── */
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 50px;
+            padding: 30px 0;
+        }
+
+        .podium-place {
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .podium-place:hover {
+            transform: translateY(-5px);
+        }
+
+        .podium-medal {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .podium-block {
+            border-radius: 16px 16px 0 0;
+            padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .podium-place:nth-child(2) .podium-block {
+            background: linear-gradient(180deg, rgba(241,196,15,0.3) 0%, rgba(241,196,15,0.05) 100%);
+            border: 2px solid rgba(241,196,15,0.4);
+            height: 160px;
+        }
+
+        .podium-place:nth-child(1) .podium-block {
+            background: linear-gradient(180deg, rgba(192,192,192,0.3) 0%, rgba(192,192,192,0.05) 100%);
+            border: 2px solid rgba(192,192,192,0.4);
+            height: 120px;
+        }
+
+        .podium-place:nth-child(3) .podium-block {
+            background: linear-gradient(180deg, rgba(205,127,50,0.3) 0%, rgba(205,127,50,0.05) 100%);
+            border: 2px solid rgba(205,127,50,0.4);
+            height: 100px;
+        }
+
+        .podium-rank {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .podium-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ── Section d'info ── */
+        .info-section {
+            margin-bottom: 40px;
+        }
+
+        .info-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section h2 .icon {
+            font-size: 1.3rem;
+        }
+
+        /* ── Cartes d'info ── */
+        .info-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f39c12;
+        }
+
+        .info-card p {
+            font-size: 0.95rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        /* ── Critères de score ── */
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .criteria-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .criteria-card:hover {
+            border-color: rgba(241,196,15,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .criteria-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .criteria-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .criteria-desc {
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .criteria-priority {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-1 {
+            background: rgba(241,196,15,0.15);
+            color: #f1c40f;
+            border: 1px solid rgba(241,196,15,0.3);
+        }
+
+        .priority-2 {
+            background: rgba(192,192,192,0.15);
+            color: #c0c0c0;
+            border: 1px solid rgba(192,192,192,0.3);
+        }
+
+        /* ── Tableau des raretés ── */
+        .rarity-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-bottom: 30px;
+        }
+
+        .rarity-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .rarity-table td {
+            padding: 14px 16px;
+            background: #1a1a1a;
+            font-size: 0.95rem;
+        }
+
+        .rarity-table tr td:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .rarity-table tr td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .rarity-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .rarity-mythique { background: #E24D44; box-shadow: 0 0 8px #E24D4460; }
+        .rarity-legendaire { background: #E07B00; box-shadow: 0 0 8px #E07B0060; }
+        .rarity-epique { background: #8E44AD; box-shadow: 0 0 8px #8E44AD60; }
+        .rarity-rare { background: #27AE60; box-shadow: 0 0 8px #27AE6060; }
+        .rarity-commune { background: #5DADE2; box-shadow: 0 0 8px #5DADE260; }
+
+        /* ── Commande Discord ── */
+        .command-box {
+            background: #1a1a1a;
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .command-slash {
+            background: #5865F2;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .command-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #5865F2;
+            margin-bottom: 4px;
+        }
+
+        .command-info p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .command-code {
+            background: rgba(88, 101, 242, 0.1);
+            color: #5865F2;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* ── Exemples ── */
+        .example-entry {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .example-rank {
+            font-size: 1.3rem;
+            font-weight: 800;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .example-details {
+            flex: 1;
+        }
+
+        .example-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .example-stats {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .example-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.05);
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .example-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+        }
+
+        /* ── Astuces ── */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .tip-card:hover {
+            border-color: rgba(46, 204, 113, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .tip-number {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            font-weight: 800;
+            font-size: 0.8rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .tip-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .tip-desc {
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #444;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer a {
+            color: #f39c12;
+            text-decoration: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 2rem; }
+            .podium { gap: 10px; }
+            .podium-block { min-width: 90px; padding: 15px; }
+            .criteria-grid { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+            .command-box { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="nav-link">Collection</a>
+    <a href="classement.html" class="nav-link active">Classement</a>
+</nav>
+
+<div class="header">
+    <h1>Classement</h1>
+    <p>Top 25 des meilleurs collectionneurs de cartes</p>
+</div>
+
+<div class="content">
+
+    <!-- Podium visuel -->
+    <div class="podium">
+        <div class="podium-place">
+            <div class="podium-medal">🥈</div>
+            <div class="podium-block">
+                <div class="podium-rank">2e</div>
+                <div class="podium-label">Place</div>
+            </div>
+        </div>
+        <div class="podium-place">
+            <div class="podium-medal">🥇</div>
+            <div class="podium-block">
+                <div class="podium-rank">1er</div>
+                <div class="podium-label">Place</div>
+            </div>
+        </div>
+        <div class="podium-place">
+            <div class="podium-medal">🥉</div>
+            <div class="podium-block">
+                <div class="podium-rank">3e</div>
+                <div class="podium-label">Place</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment ça marche -->
+    <div class="info-section">
+        <h2><span class="icon">⚙️</span> Comment fonctionne le classement ?</h2>
+        <p style="color: #888; margin-bottom: 20px; line-height: 1.6;">
+            Le classement affiche les <strong style="color:#fff">25 meilleurs collectionneurs</strong> du serveur, triés selon deux critères.
+            Utilise la commande <span class="command-code">/classement</span> dans Discord pour voir le classement en temps réel.
+        </p>
+
+        <div class="criteria-grid">
+            <div class="criteria-card">
+                <div class="criteria-icon">🃏</div>
+                <div class="criteria-title">Cartes uniques</div>
+                <div class="criteria-desc">Le nombre de cartes <strong>différentes</strong> dans ta collection. C'est le critère principal.</div>
+                <span class="criteria-priority priority-1">Critère n°1</span>
+            </div>
+            <div class="criteria-card">
+                <div class="criteria-icon">📦</div>
+                <div class="criteria-title">Total de cartes</div>
+                <div class="criteria-desc">Le nombre <strong>total</strong> de cartes possédées (doublons inclus). Sert de départage.</div>
+                <span class="criteria-priority priority-2">Critère n°2</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Répartition par rareté -->
+    <div class="info-section">
+        <h2><span class="icon">💎</span> Répartition par rareté</h2>
+        <p style="color: #888; margin-bottom: 20px; line-height: 1.6;">
+            Le classement affiche aussi ta progression par rareté. Voici le nombre de cartes à collecter dans chaque catégorie :
+        </p>
+        <table class="rarity-table">
+            <thead>
+                <tr>
+                    <th>Rareté</th>
+                    <th>Nombre de cartes</th>
+                    <th>Difficulté</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="rarity-dot rarity-commune"></span> Commune</td>
+                    <td><strong>10</strong> cartes</td>
+                    <td>⭐</td>
+                </tr>
+                <tr>
+                    <td><span class="rarity-dot rarity-rare"></span> Rare</td>
+                    <td><strong>10</strong> cartes</td>
+                    <td>⭐⭐</td>
+                </tr>
+                <tr>
+                    <td><span class="rarity-dot rarity-epique"></span> Epique</td>
+                    <td><strong>12</strong> cartes</td>
+                    <td>⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td><span class="rarity-dot rarity-legendaire"></span> Legendaire</td>
+                    <td><strong>4</strong> cartes</td>
+                    <td>⭐⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td><span class="rarity-dot rarity-mythique"></span> Mythique</td>
+                    <td><strong>1</strong> carte</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="info-card">
+            <h3>38 cartes au total</h3>
+            <p>Un vrai collectionneur doit toutes les obtenir ! La collection complète est le Graal ultime.</p>
+        </div>
+    </div>
+
+    <!-- Exemple de classement -->
+    <div class="info-section">
+        <h2><span class="icon">📊</span> Exemple d'affichage</h2>
+        <p style="color: #888; margin-bottom: 20px; line-height: 1.6;">
+            Voici un apercu de ce que tu verras avec la commande <span class="command-code">/classement</span> :
+        </p>
+
+        <div class="example-entry">
+            <div class="example-rank">🥇</div>
+            <div class="example-details">
+                <div class="example-name">Joueur A</div>
+                <div class="example-stats">35/38 uniques · 72 cartes</div>
+                <div class="example-bar"><div class="example-bar-fill" style="width: 92%"></div></div>
+            </div>
+        </div>
+        <div class="example-entry">
+            <div class="example-rank">🥈</div>
+            <div class="example-details">
+                <div class="example-name">Joueur B</div>
+                <div class="example-stats">30/38 uniques · 55 cartes</div>
+                <div class="example-bar"><div class="example-bar-fill" style="width: 79%"></div></div>
+            </div>
+        </div>
+        <div class="example-entry">
+            <div class="example-rank">🥉</div>
+            <div class="example-details">
+                <div class="example-name">Joueur C</div>
+                <div class="example-stats">25/38 uniques · 41 cartes</div>
+                <div class="example-bar"><div class="example-bar-fill" style="width: 66%"></div></div>
+            </div>
+        </div>
+        <div class="example-entry">
+            <div class="example-rank" style="color: #888;">#4</div>
+            <div class="example-details">
+                <div class="example-name">Joueur D</div>
+                <div class="example-stats">20/38 uniques · 35 cartes</div>
+                <div class="example-bar"><div class="example-bar-fill" style="width: 53%"></div></div>
+            </div>
+        </div>
+        <div class="example-entry">
+            <div class="example-rank" style="color: #888;">#5</div>
+            <div class="example-details">
+                <div class="example-name">Joueur E</div>
+                <div class="example-stats">15/38 uniques · 28 cartes</div>
+                <div class="example-bar"><div class="example-bar-fill" style="width: 39%"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Commande Discord -->
+    <div class="info-section">
+        <h2><span class="icon">🤖</span> Commandes utiles</h2>
+
+        <div class="command-box">
+            <div class="command-slash">/</div>
+            <div class="command-info">
+                <h3>/classement</h3>
+                <p>Affiche le top 25 des collectionneurs (5 par page avec navigation)</p>
+            </div>
+        </div>
+
+        <div class="command-box">
+            <div class="command-slash">/</div>
+            <div class="command-info">
+                <h3>/collection</h3>
+                <p>Voir ta collection perso avec ton classement actuel</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Astuces -->
+    <div class="info-section">
+        <h2><span class="icon">💡</span> Astuces pour monter au classement</h2>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-number">1</div>
+                <div class="tip-title">Ouvre tes packs chaque jour</div>
+                <div class="tip-desc">Tu as droit a 3 cartes par jour avec <span class="command-code">/tirage</span>. Ne rate aucun jour !</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-number">2</div>
+                <div class="tip-title">Echange tes doublons</div>
+                <div class="tip-desc">Utilise <span class="command-code">/echanger</span> pour troquer tes doublons contre des cartes qui te manquent.</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-number">3</div>
+                <div class="tip-title">Vise les cartes uniques</div>
+                <div class="tip-desc">Le nombre de cartes uniques est le critere principal. Diversifie ta collection au maximum !</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>ZinzinBot &copy; 2025 &mdash; Bot Discord de collection de cartes Minecraft</p>
+</div>
+
+</body>
+</html>
