@@ -154,18 +154,16 @@
         }
 
         .badge-new {
-            position: absolute;
-            top: 8px;
-            right: 8px;
+            display: inline-block;
             background: #e74c3c;
             color: #fff;
             font-size: 0.6rem;
             font-weight: 700;
-            padding: 3px 8px;
+            padding: 2px 7px;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            z-index: 1;
+            margin-top: 5px;
             box-shadow: 0 2px 8px rgba(231,76,60,0.6);
         }
 
@@ -525,12 +523,12 @@ function renderCards(filter = 'all') {
             <div class="cards-grid">
                 ${cards.map(card => `
                     <div class="card ${card.css}" onclick="openModal('${card.id}')">
-                        ${card.isNew ? '<span class="badge-new">Nouveau</span>' : ''}
                         <img class="card-image" src="${card.image}" alt="${card.name}" loading="lazy">
                         <div class="card-info">
                             <div class="card-name">${card.name}</div>
                             <div class="card-rarity">${card.rarity}</div>
                             <div class="card-chance">${card.chance.toFixed(2)}% par carte</div>
+                            ${card.isNew ? '<span class="badge-new">Nouveau</span>' : ''}
                         </div>
                     </div>
                 `).join('')}
