@@ -319,19 +319,27 @@
 
         .sort-btn {
             padding: 7px 16px;
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid;
             border-radius: 50px;
             background: transparent;
-            color: #888;
             font-family: 'Poppins', sans-serif;
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            opacity: 0.45;
         }
 
-        .sort-btn:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
-        .sort-btn.active { color: #000; border-color: transparent; }
+        .sort-btn:hover { opacity: 0.8; }
+        .sort-btn.active { color: #000 !important; border-color: transparent !important; opacity: 1; }
+
+        .sort-btn.sort-total     { border-color: #f1c40f; color: #f1c40f; }
+        .sort-btn.sort-mythique  { border-color: #E24D44; color: #E24D44; }
+        .sort-btn.sort-legendaire{ border-color: #E07B00; color: #E07B00; }
+        .sort-btn.sort-epique    { border-color: #8E44AD; color: #8E44AD; }
+        .sort-btn.sort-rare      { border-color: #27AE60; color: #27AE60; }
+        .sort-btn.sort-commune   { border-color: #5DADE2; color: #5DADE2; }
+
         .sort-btn.active.sort-total    { background: linear-gradient(135deg, #f1c40f, #e67e22); }
         .sort-btn.active.sort-mythique  { background: #E24D44; }
         .sort-btn.active.sort-legendaire{ background: #E07B00; }
