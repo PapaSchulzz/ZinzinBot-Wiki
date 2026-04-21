@@ -309,6 +309,36 @@
         .tag-rare       { background: rgba(39,174,96,0.15); color: #27AE60; }
         .tag-commune    { background: rgba(93,173,226,0.15); color: #5DADE2; }
 
+        /* ── Boutons de tri ── */
+        .sort-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .sort-btn {
+            padding: 7px 16px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            background: transparent;
+            color: #888;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sort-btn:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+        .sort-btn.active { color: #000; border-color: transparent; }
+        .sort-btn.active.sort-total    { background: linear-gradient(135deg, #f1c40f, #e67e22); }
+        .sort-btn.active.sort-mythique  { background: #E24D44; }
+        .sort-btn.active.sort-legendaire{ background: #E07B00; }
+        .sort-btn.active.sort-epique    { background: #8E44AD; }
+        .sort-btn.active.sort-rare      { background: #27AE60; }
+        .sort-btn.active.sort-commune   { background: #5DADE2; }
+
         /* ── Section d'info ── */
         .info-section {
             margin-bottom: 40px;
@@ -475,6 +505,14 @@
     <!-- Classement live -->
     <div class="info-section" id="leaderboard-section" style="display:none">
         <h2><span class="icon">🏆</span> Classement en direct</h2>
+        <div class="sort-bar">
+            <button class="sort-btn sort-total active" onclick="sortBy('total')">🏅 Uniques total</button>
+            <button class="sort-btn sort-mythique"    onclick="sortBy('Mythique')">◆ Mythique</button>
+            <button class="sort-btn sort-legendaire"  onclick="sortBy('Légendaire')">★ Légendaire</button>
+            <button class="sort-btn sort-epique"      onclick="sortBy('Épique')">◈ Épique</button>
+            <button class="sort-btn sort-rare"        onclick="sortBy('Rare')">◇ Rare</button>
+            <button class="sort-btn sort-commune"     onclick="sortBy('Commune')">· Commune</button>
+        </div>
         <div id="leaderboard"></div>
     </div>
 
@@ -533,6 +571,60 @@ const LEADERBOARD_BIN_ID = "69d6f3a7aaba882197dacc2a";
 const API_URL = `https://api.jsonbin.io/v3/b/${LEADERBOARD_BIN_ID}/latest`;
 
 const MEDALS = ["🥇", "🥈", "🥉"];
+let _topData = [], _totalCards = 38, _rarityMax = {};
+
+function getRarityVal(p, key) {
+    const r = p.rarities || {};
+    return r[key] || 0;
+}
+
+function sortBy(key) {
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector(`.sort-btn.sort-${key === 'total' ? 'total' : key.toLowerCase().replace('é','e').replace('è','e').replace('î','i').replace('ô','o').replace('û','u').replace('â','a')}`);
+    if (btn) btn.classList.add('active');
+
+    const sorted = [..._topData].sort((a, b) => {
+        if (key === 'total') return b.unique - a.unique;
+        return getRarityVal(b, key) - getRarityVal(a, key);
+    });
+    renderList(sorted);
+}
+
+function renderList(top) {
+    const lbContainer = document.getElementById('leaderboard');
+    lbContainer.innerHTML = top.map((p, i) => {
+        const originalRank = _topData.indexOf(p) + 1;
+        const rank = originalRank <= 3 ? MEDALS[originalRank - 1] : `<span style="color:#888">#${originalRank}</span>`;
+        const pct = Math.round((p.unique / _totalCards) * 100);
+        const topClass = originalRank <= 3 ? ` top-${originalRank}` : '';
+
+        const rarityTags = [
+            { key: "Mythique",   css: "mythique" },
+            { key: "Légendaire", css: "legendaire" },
+            { key: "Épique",     css: "epique" },
+            { key: "Rare",       css: "rare" },
+            { key: "Commune",    css: "commune" },
+        ].map(r => {
+            const val = getRarityVal(p, r.key);
+            const max = _rarityMax[r.key] || '?';
+            return `<span class="lb-rarity-tag tag-${r.css}">${val}/${max}</span>`;
+        }).join('');
+
+        const defaultAv = "https://cdn.discordapp.com/embed/avatars/0.png";
+        return `
+            <div class="leaderboard-entry${topClass}">
+                <div class="lb-rank">${rank}</div>
+                <img class="lb-avatar" src="${p.avatar || defaultAv}" alt="" onerror="this.src='${defaultAv}'">
+                <div class="lb-info">
+                    <div class="lb-name">${escapeHtml(p.name)}</div>
+                    <div class="lb-stats">${p.unique}/${_totalCards} uniques · ${p.total} cartes au total</div>
+                    <div class="lb-rarities">${rarityTags}</div>
+                    <div class="lb-bar"><div class="lb-bar-fill" style="width: ${pct}%"></div></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
 async function loadLeaderboard() {
     const loading = document.getElementById('loading');
@@ -550,13 +642,13 @@ async function loadLeaderboard() {
         if (!resp.ok) throw new Error(`Erreur HTTP ${resp.status}`);
 
         const data = await resp.json();
-        const top = data.top || [];
-        const totalCards = data.total_cards || 38;
-        const rarityMax = data.rarity_max || {};
+        _topData     = data.top || [];
+        _totalCards  = data.total_cards || 38;
+        _rarityMax   = data.rarity_max || {};
 
         loading.style.display = 'none';
 
-        if (top.length === 0) {
+        if (_topData.length === 0) {
             error.textContent = "Aucun joueur dans le classement pour le moment.";
             error.style.display = 'block';
             return;
@@ -568,18 +660,15 @@ async function loadLeaderboard() {
             updatedAt.textContent = `Mis a jour le ${d.toLocaleDateString('fr-FR')} a ${d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})}`;
         }
 
-        // ── Podium ──
-        if (top.length >= 3) {
-            // Ordre : 2e, 1er, 3e
-            const podiumOrder = [top[1], top[0], top[2]];
-            const podiumLabels = ["2e", "1er", "3e"];
+        // ── Podium (toujours basé sur le tri uniques) ──
+        if (_topData.length >= 3) {
+            const podiumOrder = [_topData[1], _topData[0], _topData[2]];
             const heights = [140, 180, 120];
             const colors = [
                 { bg: "rgba(192,192,192,", border: "rgba(192,192,192,0.4)" },
-                { bg: "rgba(241,196,15,", border: "rgba(241,196,15,0.4)" },
-                { bg: "rgba(205,127,50,", border: "rgba(205,127,50,0.4)" },
+                { bg: "rgba(241,196,15,",  border: "rgba(241,196,15,0.4)"  },
+                { bg: "rgba(205,127,50,",  border: "rgba(205,127,50,0.4)"  },
             ];
-
             const defaultAvatar = "https://cdn.discordapp.com/embed/avatars/0.png";
             podium.innerHTML = podiumOrder.map((p, i) => `
                 <div class="podium-place">
@@ -591,64 +680,14 @@ async function loadLeaderboard() {
                     ">
                         <img class="podium-avatar" src="${p.avatar || defaultAvatar}" alt="${escapeHtml(p.name)}" onerror="this.src='${defaultAvatar}'">
                         <div class="podium-name">${escapeHtml(p.name)}</div>
-                        <div class="podium-stats">${p.unique}/${totalCards} uniques</div>
+                        <div class="podium-stats">${p.unique}/${_totalCards} uniques</div>
                     </div>
                 </div>
             `).join('');
             podium.style.display = 'flex';
         }
 
-        // ── Liste complete ──
-        lbContainer.innerHTML = top.map((p, i) => {
-            const rank = i < 3 ? MEDALS[i] : `<span style="color:#888">#${i+1}</span>`;
-            const pct = Math.round((p.unique / totalCards) * 100);
-            const topClass = i < 3 ? ` top-${i+1}` : '';
-
-            // Tags de rarete
-            const rarities = p.rarities || {};
-            const rarityTags = [
-                { key: "Mythique",   css: "mythique" },
-                { key: "Legendaire", css: "legendaire" },
-                { key: "Epique",     css: "epique" },
-                { key: "Rare",       css: "rare" },
-                { key: "Commune",    css: "commune" },
-            ].map(r => {
-                // Gerer les accents dans les cles
-                const val = rarities[r.key] || rarities[r.key.normalize("NFD").replace(/[\u0300-\u036f]/g, "")] || 0;
-                const max = rarityMax[r.key] || rarityMax[r.key.normalize("NFD").replace(/[\u0300-\u036f]/g, "")] || '?';
-                // Chercher aussi avec accents
-                const valAcc = rarities["Legendaire"] || rarities["Légendaire"] || 0;
-                const valEp = rarities["Epique"] || rarities["Épique"] || 0;
-                let finalVal = val;
-                if (r.key === "Legendaire") finalVal = rarities["Légendaire"] || rarities["Legendaire"] || 0;
-                if (r.key === "Epique") finalVal = rarities["Épique"] || rarities["Epique"] || 0;
-                if (r.key === "Mythique") finalVal = rarities["Mythique"] || 0;
-                if (r.key === "Rare") finalVal = rarities["Rare"] || 0;
-                if (r.key === "Commune") finalVal = rarities["Commune"] || 0;
-                let finalMax = max;
-                if (r.key === "Legendaire") finalMax = rarityMax["Légendaire"] || rarityMax["Legendaire"] || '?';
-                if (r.key === "Epique") finalMax = rarityMax["Épique"] || rarityMax["Epique"] || '?';
-                if (r.key === "Mythique") finalMax = rarityMax["Mythique"] || '?';
-                if (r.key === "Rare") finalMax = rarityMax["Rare"] || '?';
-                if (r.key === "Commune") finalMax = rarityMax["Commune"] || '?';
-                return `<span class="lb-rarity-tag tag-${r.css}">${finalVal}/${finalMax}</span>`;
-            }).join('');
-
-            const defaultAv = "https://cdn.discordapp.com/embed/avatars/0.png";
-            return `
-                <div class="leaderboard-entry${topClass}">
-                    <div class="lb-rank">${rank}</div>
-                    <img class="lb-avatar" src="${p.avatar || defaultAv}" alt="" onerror="this.src='${defaultAv}'">
-                    <div class="lb-info">
-                        <div class="lb-name">${escapeHtml(p.name)}</div>
-                        <div class="lb-stats">${p.unique}/${totalCards} uniques · ${p.total} cartes au total</div>
-                        <div class="lb-rarities">${rarityTags}</div>
-                        <div class="lb-bar"><div class="lb-bar-fill" style="width: ${pct}%"></div></div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
+        renderList(_topData);
         section.style.display = 'block';
 
     } catch (e) {
