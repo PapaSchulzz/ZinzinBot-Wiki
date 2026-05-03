@@ -167,6 +167,20 @@
             box-shadow: 0 2px 8px rgba(231,76,60,0.6);
         }
 
+        .badge-recent {
+            display: inline-block;
+            background: #f39c12;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            box-shadow: 0 2px 8px rgba(243,156,18,0.6);
+        }
+
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -459,9 +473,9 @@ const CARDS = [
     { id: "ravageur", name: "Ravageur", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Rabager.png", css: "legendaire" },
     { id: "poulpe_luisant", name: "Poulpe Luisant", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/glowsquid.png", css: "legendaire" },
     { id: "golem_cuivre", name: "Golem de Cuivre", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/GolemCuivre.png", css: "legendaire" },
-    { id: "villageois", name: "Villageois", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Villageois.png", css: "legendaire", isNew: true },
-    { id: "allay", name: "Allay", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Allay.png", css: "legendaire", isNew: true },
-    { id: "marchand_ambulant", name: "Marchand Ambulant", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Marchand Ambulant.png", css: "legendaire", isNew: true },
+    { id: "villageois", name: "Villageois", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Villageois.png", css: "legendaire" },
+    { id: "allay", name: "Allay", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Allay.png", css: "legendaire" },
+    { id: "marchand_ambulant", name: "Marchand Ambulant", rarity: "Légendaire", chance: 0.50, color: "#E07B00", image: "images/Marchand Ambulant.png", css: "legendaire", batch: 2 },
 
     // Épiques
     { id: "sorciere", name: "Sorcière", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Sorciere.png", css: "epique" },
@@ -473,10 +487,10 @@ const CARDS = [
     { id: "piglin_barbare", name: "Piglin Barbare", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/PiglinBrut.png", css: "epique" },
     { id: "evocateur", name: "Évocateur", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Evoker.png", css: "epique" },
     { id: "panda", name: "Panda", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Pandat.png", css: "epique" },
-    { id: "wither_squelette", name: "Wither Squelette", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Wither Squelette.png", css: "epique", isNew: true },
-    { id: "golem_neige", name: "Golem de Neige", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Golem de Neige.png", css: "epique", isNew: true },
-    { id: "phantom", name: "Phantom", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Phantom.png", css: "epique", isNew: true },
-    { id: "cheval_squelette", name: "Cheval Squelette", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Cheval Squelette.png", css: "epique", isNew: true },
+    { id: "wither_squelette", name: "Wither Squelette", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Wither Squelette.png", css: "epique" },
+    { id: "golem_neige", name: "Golem de Neige", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Golem de Neige.png", css: "epique", batch: 2 },
+    { id: "phantom", name: "Phantom", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Phantom.png", css: "epique", batch: 3 },
+    { id: "cheval_squelette", name: "Cheval Squelette", rarity: "Épique", chance: 1.20, color: "#8E44AD", image: "images/Cheval Squelette.png", css: "epique", batch: 3 },
 
     // Rares
     { id: "tatou", name: "Tatou", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Tatou.png", css: "rare" },
@@ -486,16 +500,16 @@ const CARDS = [
     { id: "pillard", name: "Pillard", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Pillager.png", css: "rare" },
     { id: "champimeuh", name: "Champimeuh", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/VacheChampi.png", css: "rare" },
     { id: "strider", name: "Strider", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Strider.png", css: "rare" },
-    { id: "axolotl", name: "Axolotl", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Axolotl.png", css: "rare", isNew: true },
-    { id: "ghast", name: "Ghast", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Ghast.png", css: "rare", isNew: true },
-    { id: "hoglin", name: "Hoglin", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Hoglin.png", css: "rare", isNew: true },
-    { id: "renifleur", name: "Renifleur", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Renifleur.png", css: "rare", isNew: true },
-    { id: "slime", name: "Slime", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Slime.png", css: "rare", isNew: true },
-    { id: "squelette", name: "Squelette", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Squelette.png", css: "rare", isNew: true },
-    { id: "lama_marchand", name: "Lama de Marchand", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Lama de Marchand.png", css: "rare", isNew: true },
-    { id: "embourbe", name: "Embourbé", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Embourbé.png", css: "rare", isNew: true },
-    { id: "zoglin", name: "Zoglin", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Zoglin.png", css: "rare", isNew: true },
-    { id: "zombie", name: "Zombie", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Zombie.png", css: "rare", isNew: true },
+    { id: "axolotl", name: "Axolotl", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Axolotl.png", css: "rare" },
+    { id: "ghast", name: "Ghast", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Ghast.png", css: "rare" },
+    { id: "hoglin", name: "Hoglin", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Hoglin.png", css: "rare" },
+    { id: "renifleur", name: "Renifleur", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Renifleur.png", css: "rare" },
+    { id: "slime", name: "Slime", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Slime.png", css: "rare" },
+    { id: "squelette", name: "Squelette", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Squelette.png", css: "rare" },
+    { id: "lama_marchand", name: "Lama de Marchand", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Lama de Marchand.png", css: "rare", batch: 2 },
+    { id: "embourbe", name: "Embourbé", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Embourbé.png", css: "rare", batch: 2 },
+    { id: "zoglin", name: "Zoglin", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Zoglin.png", css: "rare", batch: 3 },
+    { id: "zombie", name: "Zombie", rarity: "Rare", chance: 2.50, color: "#27AE60", image: "images/Zombie.png", css: "rare", batch: 3 },
 
     // Communes
     { id: "abeille", name: "Abeille", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Abeille.png", css: "commune" },
@@ -512,12 +526,12 @@ const CARDS = [
     { id: "perroquet", name: "Perroquet", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Perroquet.png", css: "commune" },
     { id: "poule", name: "Poule", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/poule.png", css: "commune" },
     { id: "poisson_tropical", name: "Poisson Tropical", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/TropicalFish.png", css: "commune" },
-    { id: "chat", name: "Chat", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Chat.png", css: "commune", isNew: true },
-    { id: "poisson_globe", name: "Poisson Globe", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Poisson Globe.png", css: "commune", isNew: true },
-    { id: "endermite", name: "Endermite", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Endermite.png", css: "commune", isNew: true },
-    { id: "araignee", name: "Araignée", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Araignée.png", css: "commune", isNew: true },
-    { id: "chevre", name: "Chèvre", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Chèvre.png", css: "commune", isNew: true },
-    { id: "tetard", name: "Têtard", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Têtard.png", css: "commune", isNew: true },
+    { id: "chat", name: "Chat", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Chat.png", css: "commune", batch: 2 },
+    { id: "poisson_globe", name: "Poisson Globe", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Poisson Globe.png", css: "commune", batch: 2 },
+    { id: "endermite", name: "Endermite", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Endermite.png", css: "commune", batch: 2 },
+    { id: "araignee", name: "Araignée", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Araignée.png", css: "commune", batch: 3 },
+    { id: "chevre", name: "Chèvre", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Chèvre.png", css: "commune", batch: 3 },
+    { id: "tetard", name: "Têtard", rarity: "Commune", chance: 5.50, color: "#5DADE2", image: "images/Têtard.png", css: "commune", batch: 3 },
 ];
 
 const RARITIES = [
@@ -552,7 +566,7 @@ function renderCards(filter = 'all') {
                             <div class="card-name">${card.name}</div>
                             <div class="card-rarity">${card.rarity}</div>
                             <div class="card-chance">${card.chance.toFixed(2)}% par carte</div>
-                            ${card.isNew ? '<span class="badge-new">Nouveau</span>' : ''}
+                            ${card.batch === 3 ? '<span class="badge-new">Nouveau</span>' : card.batch === 2 ? '<span class="badge-recent">Récent</span>' : ''}
                         </div>
                     </div>
                 `).join('')}
