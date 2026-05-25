@@ -585,7 +585,7 @@ function renderCards(filter = 'all') {
                             <div class="card-name">${card.name}</div>
                             <div class="card-rarity">${card.rarity}</div>
                             <div class="card-chance">${card.chance.toFixed(2)}% par carte</div>
-                            ${card.batch === 3 ? '<span class="badge-new">Nouveau</span>' : card.batch === 2 ? '<span class="badge-recent">Récent</span>' : ''}
+                            ${card.batch === 4 ? '<span class="badge-new">Nouveau</span>' : card.batch === 3 ? '<span class="badge-recent">Récent</span>' : ''}
                         </div>
                     </div>
                 `).join('')}
