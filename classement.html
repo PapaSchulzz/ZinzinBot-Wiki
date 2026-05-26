@@ -574,10 +574,10 @@
 </div>
 
 <script>
-// ── ID du JSONBin public du classement ──
-// IMPORTANT : remplace cet ID par celui de ton bin public
-const LEADERBOARD_BIN_ID = "69d6f3a7aaba882197dacc2a";
-const API_URL = `https://api.jsonbin.io/v3/b/${LEADERBOARD_BIN_ID}/latest`;
+// ── Endpoint du bot qui sert le classement ──
+// IMPORTANT : remplace par l'URL publique générée par Railway pour ton service bot
+const BOT_BASE_URL = "https://discord-bot-production-92aa.up.railway.app";
+const API_URL = `${BOT_BASE_URL}/leaderboard`;
 
 const MEDALS = ["💎", "⭐", "🪨"];
 let _topData = [], _totalCards = 38, _rarityMax = {};
@@ -644,9 +644,7 @@ async function loadLeaderboard() {
     const updatedAt = document.getElementById('updated-at');
 
     try {
-        const resp = await fetch(API_URL, {
-            headers: { "X-Bin-Meta": "false" }
-        });
+        const resp = await fetch(API_URL);
 
         if (!resp.ok) throw new Error(`Erreur HTTP ${resp.status}`);
 
@@ -702,7 +700,7 @@ async function loadLeaderboard() {
     } catch (e) {
         console.error(e);
         loading.style.display = 'none';
-        error.innerHTML = `<strong>Impossible de charger le classement</strong><br><span style="font-size:0.85rem;color:#aaa;">Verifie que le bin JSONBin est public et que l'ID est correct.</span>`;
+        error.innerHTML = `<strong>Impossible de charger le classement</strong><br><span style="font-size:0.85rem;color:#aaa;">Le bot est peut-etre hors ligne. Reessaie dans quelques minutes.</span>`;
         error.style.display = 'block';
     }
 }
