@@ -183,6 +183,55 @@
             height: 32px;
         }
 
+        /* ── Effet d'enchantement au survol ──
+           Un <img> ne peut pas porter de pseudo-élément, donc chaque icône est
+           emballée au chargement dans un .enchanted (voir enchantIcons()). Le
+           masque découpe le reflet à la forme exacte de l'icône, sinon on
+           verrait un rectangle violet balayer le fond transparent. */
+        .enchanted {
+            position: relative;
+            display: inline-flex;
+            vertical-align: middle;
+            line-height: 0;
+            flex-shrink: 0;
+        }
+
+        .enchanted::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            background: linear-gradient(110deg,
+                transparent 35%,
+                rgba(176, 92, 255, 0.85) 45%,
+                rgba(240, 190, 255, 0.95) 50%,
+                rgba(176, 92, 255, 0.85) 55%,
+                transparent 65%);
+            background-size: 250% 100%;
+            mix-blend-mode: screen;
+            -webkit-mask-image: var(--glint);
+            mask-image: var(--glint);
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+        }
+
+        .enchanted:hover::after {
+            opacity: 1;
+            animation: enchant-glint 1.1s linear infinite;
+        }
+
+        @keyframes enchant-glint {
+            from { background-position: 150% 0; }
+            to   { background-position: -50% 0; }
+        }
+
+        /* Respecte le réglage système "moins d'animations" */
+        @media (prefers-reduced-motion: reduce) {
+            .enchanted:hover::after { animation: none; }
+        }
+
         /* ── Grille de cartes ── */
         .cards-grid {
             display: grid;
@@ -671,6 +720,26 @@ function cardChance(card) {
     return CARD_CHANCE[card.css].toFixed(2);
 }
 
+// ── Effet d'enchantement au survol ──
+// Emballe chaque icône dans un <span class="enchanted"> qui porte le reflet :
+// un <img> ne peut pas avoir de ::after. La marge de l'icône passe sur
+// l'emballage, sinon le masque du reflet serait étiré au-delà de l'image.
+// Appelé après chaque rendu, car certaines icônes sont recréées.
+function enchantIcons(root) {
+    (root || document).querySelectorAll('img.section-icon, img.medal-icon, img.h2-icon').forEach(img => {
+        if (img.parentElement && img.parentElement.classList.contains('enchanted')) return;
+        const wrap = document.createElement('span');
+        wrap.className = 'enchanted';
+        wrap.style.setProperty('--glint', 'url("' + img.getAttribute('src') + '")');
+        const cs = getComputedStyle(img);
+        wrap.style.marginRight = cs.marginRight;
+        wrap.style.marginLeft = cs.marginLeft;
+        img.style.margin = '0';
+        img.parentNode.insertBefore(wrap, img);
+        wrap.appendChild(img);
+    });
+}
+
 function renderCards(filter = 'all') {
     const container = document.getElementById('cards-container');
     container.innerHTML = '';
@@ -735,6 +804,7 @@ document.addEventListener('keydown', e => {
 document.getElementById('stat-total').textContent = CARDS.length;
 document.getElementById('stat-rarities').textContent = RARITIES.length;
 renderCards();
+enchantIcons();
 </script>
 
 </body>
