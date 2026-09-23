@@ -436,11 +436,11 @@
     <p>Collection complète des cartes Minecraft</p>
     <div class="stats">
         <div class="stat-box">
-            <div class="number">53</div>
+            <div class="number" id="stat-total">--</div>
             <div class="label">Cartes au total</div>
         </div>
         <div class="stat-box">
-            <div class="number">5</div>
+            <div class="number" id="stat-rarities">--</div>
             <div class="label">Raretés</div>
         </div>
         <div class="stat-box">
@@ -478,6 +478,29 @@
         </ul>
         <p style="margin: 0; font-size: 0.9rem; color: #aaa;">💡 <strong>Astuce :</strong> échanger un doublon avec un autre joueur via <code>/echanger</code> est souvent plus rentable (tu récupères une carte qui te manque au lieu de la perdre).</p>
     </div>
+
+    <div style="max-width: 800px; margin: 20px auto 0; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-align: left; line-height: 1.6;">
+        <h3 style="margin: 0 0 10px 0; color: #3498db;">🔄 Échanger avec un autre joueur (<code>/echanger</code>)</h3>
+        <p style="margin: 0 0 10px 0;">Propose une de tes cartes à un membre contre une des siennes. Personne ne perd de carte : c'est un troc, une contre une.</p>
+        <p style="margin: 0 0 10px 0;"><strong>Règles :</strong></p>
+        <ul style="margin: 0 0 10px 0; padding-left: 20px;">
+            <li>L'échange ne se fait qu'entre cartes de <strong>même rareté</strong> (une Épique contre une Épique, jamais une Commune contre une Mythique).</li>
+            <li>Tu ne peux proposer qu'une carte que tu possèdes, et demander qu'une carte que l'autre possède.</li>
+            <li>L'autre joueur doit <strong>accepter</strong> : la proposition expire au bout de <strong>3 minutes</strong>.</li>
+            <li>Impossible d'échanger avec soi-même ni avec un bot.</li>
+        </ul>
+        <p style="margin: 0; font-size: 0.9rem; color: #aaa;">💡 Les deux inventaires sont revérifiés au moment de l'acceptation : si l'un des deux n'a plus la carte, l'échange est annulé.</p>
+    </div>
+
+    <div style="max-width: 800px; margin: 20px auto 0; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-align: left; line-height: 1.6;">
+        <h3 style="margin: 0 0 10px 0; color: #e67e22;">🎴 Le pack quotidien (<code>/ouvrir</code>)</h3>
+        <ul style="margin: 0 0 10px 0; padding-left: 20px;">
+            <li><strong>3 cartes par jour</strong> (parfois 4, voir plus haut), une seule ouverture par jour.</li>
+            <li>Les packs se rechargent <strong>chaque jour à minuit</strong>, heure de Paris.</li>
+            <li>Ouvrir plusieurs jours d'affilée fait monter ton <strong>streak</strong>, qui augmente la chance de 4ᵉ carte. Tu as <strong>une journée de tolérance</strong> : le streak n'est perdu qu'après deux jours sans ouverture.</li>
+        </ul>
+        <p style="margin: 0; font-size: 0.9rem; color: #aaa;">💡 <code>/demo-ouvrir</code> montre à quoi ressemblerait un pack sans consommer ton ouverture du jour.</p>
+    </div>
 </div>
 
 <div class="filters">
@@ -511,105 +534,120 @@
 <script>
 const CARDS = [
     // Mythique
-    { id: "enderman", name: "Enderman", rarity: "Mythique", chance: 0.05, color: "#E24D44", image: "images/Enderman.png", css: "mythique" },
-    { id: "ender_dragon", name: "Ender Dragon", rarity: "Mythique", chance: 0.05, color: "#E24D44", image: "images/Ender Dragon.png", css: "mythique", batch: 2 },
-    { id: "totem_immortalite", name: "Totem d'Immortalité", rarity: "Mythique", chance: 0.05, color: "#E24D44", image: "images/Totem d'Immortalité.png", css: "mythique", batch: 2 },
+    { id: "enderman", name: "Enderman", rarity: "Mythique", color: "#E24D44", image: "images/Enderman.png", css: "mythique" },
+    { id: "ender_dragon", name: "Ender Dragon", rarity: "Mythique", color: "#E24D44", image: "images/Ender Dragon.png", css: "mythique", batch: 2 },
+    { id: "totem_immortalite", name: "Totem d'Immortalité", rarity: "Mythique", color: "#E24D44", image: "images/Totem d'Immortalité.png", css: "mythique", batch: 2 },
 
     // Légendaires
-    { id: "warden", name: "Warden", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Warden.png", css: "legendaire" },
-    { id: "grand_gardien", name: "Grand Gardien", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Elder.png", css: "legendaire" },
-    { id: "grinceur", name: "Grinceur", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Creaking.png", css: "legendaire" },
-    { id: "ravageur", name: "Ravageur", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Rabager.png", css: "legendaire" },
-    { id: "poulpe_luisant", name: "Poulpe Luisant", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/glowsquid.png", css: "legendaire" },
-    { id: "golem_cuivre", name: "Golem de Cuivre", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/GolemCuivre.png", css: "legendaire" },
-    { id: "villageois", name: "Villageois", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Villageois.png", css: "legendaire" },
-    { id: "allay", name: "Allay", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Allay.png", css: "legendaire" },
-    { id: "marchand_ambulant", name: "Marchand Ambulant", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Marchand Ambulant.png", css: "legendaire" },
-    { id: "vex", name: "Vex", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Vex.png", css: "legendaire", batch: 2 },
-    { id: "wither", name: "Wither", rarity: "Légendaire", chance: 0.20, color: "#E07B00", image: "images/Wither.png", css: "legendaire", batch: 4 },
+    { id: "warden", name: "Warden", rarity: "Légendaire", color: "#E07B00", image: "images/Warden.png", css: "legendaire" },
+    { id: "grand_gardien", name: "Grand Gardien", rarity: "Légendaire", color: "#E07B00", image: "images/Elder.png", css: "legendaire" },
+    { id: "grinceur", name: "Grinceur", rarity: "Légendaire", color: "#E07B00", image: "images/Creaking.png", css: "legendaire" },
+    { id: "ravageur", name: "Ravageur", rarity: "Légendaire", color: "#E07B00", image: "images/Rabager.png", css: "legendaire" },
+    { id: "poulpe_luisant", name: "Poulpe Luisant", rarity: "Légendaire", color: "#E07B00", image: "images/glowsquid.png", css: "legendaire" },
+    { id: "golem_cuivre", name: "Golem de Cuivre", rarity: "Légendaire", color: "#E07B00", image: "images/GolemCuivre.png", css: "legendaire" },
+    { id: "villageois", name: "Villageois", rarity: "Légendaire", color: "#E07B00", image: "images/Villageois.png", css: "legendaire" },
+    { id: "allay", name: "Allay", rarity: "Légendaire", color: "#E07B00", image: "images/Allay.png", css: "legendaire" },
+    { id: "marchand_ambulant", name: "Marchand Ambulant", rarity: "Légendaire", color: "#E07B00", image: "images/Marchand Ambulant.png", css: "legendaire" },
+    { id: "vex", name: "Vex", rarity: "Légendaire", color: "#E07B00", image: "images/Vex.png", css: "legendaire", batch: 2 },
+    { id: "wither", name: "Wither", rarity: "Légendaire", color: "#E07B00", image: "images/Wither.png", css: "legendaire", batch: 4 },
 
     // Épiques
-    { id: "sorciere", name: "Sorcière", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Sorciere.png", css: "epique" },
-    { id: "blaze", name: "Blaze", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Blaze.png", css: "epique" },
-    { id: "breeze", name: "Breeze", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Breeze.png", css: "epique" },
-    { id: "cheval_zombie", name: "Cheval Zombie", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Cheval Zombie.png", css: "epique" },
-    { id: "creeper", name: "Creeper", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Creeper.png", css: "epique" },
-    { id: "golem_fer", name: "Golem de Fer", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Golem.png", css: "epique" },
-    { id: "piglin_barbare", name: "Piglin Barbare", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/PiglinBrut.png", css: "epique" },
-    { id: "evocateur", name: "Évocateur", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Evoker.png", css: "epique" },
-    { id: "panda", name: "Panda", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Pandat.png", css: "epique" },
-    { id: "wither_squelette", name: "Wither Squelette", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Wither Squelette.png", css: "epique" },
-    { id: "golem_neige", name: "Golem de Neige", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Golem de Neige.png", css: "epique" },
-    { id: "phantom", name: "Phantom", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Phantom.png", css: "epique", batch: 2 },
-    { id: "cheval_squelette", name: "Cheval Squelette", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Cheval Squelette.png", css: "epique", batch: 2 },
-    { id: "zombie_momifie", name: "Zombie Momifié", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Zombie Momifié.png", css: "epique", batch: 2 },
-    { id: "gardien", name: "Gardien", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Gardien.png", css: "epique", batch: 3 },
-    { id: "grenouille", name: "Grenouille", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Grenouille.png", css: "epique", batch: 3 },
-    { id: "shulker", name: "Shulker", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Shulker.png", css: "epique", batch: 4 },
-    { id: "zombie_villageois", name: "Zombie Villageois", rarity: "Épique", chance: 1.03, color: "#8E44AD", image: "images/Zombie Villageois.png", css: "epique", batch: 4 },
+    { id: "sorciere", name: "Sorcière", rarity: "Épique", color: "#8E44AD", image: "images/Sorciere.png", css: "epique" },
+    { id: "blaze", name: "Blaze", rarity: "Épique", color: "#8E44AD", image: "images/Blaze.png", css: "epique" },
+    { id: "breeze", name: "Breeze", rarity: "Épique", color: "#8E44AD", image: "images/Breeze.png", css: "epique" },
+    { id: "cheval_zombie", name: "Cheval Zombie", rarity: "Épique", color: "#8E44AD", image: "images/Cheval Zombie.png", css: "epique" },
+    { id: "creeper", name: "Creeper", rarity: "Épique", color: "#8E44AD", image: "images/Creeper.png", css: "epique" },
+    { id: "golem_fer", name: "Golem de Fer", rarity: "Épique", color: "#8E44AD", image: "images/Golem.png", css: "epique" },
+    { id: "piglin_barbare", name: "Piglin Barbare", rarity: "Épique", color: "#8E44AD", image: "images/PiglinBrut.png", css: "epique" },
+    { id: "evocateur", name: "Évocateur", rarity: "Épique", color: "#8E44AD", image: "images/Evoker.png", css: "epique" },
+    { id: "panda", name: "Panda", rarity: "Épique", color: "#8E44AD", image: "images/Pandat.png", css: "epique" },
+    { id: "wither_squelette", name: "Wither Squelette", rarity: "Épique", color: "#8E44AD", image: "images/Wither Squelette.png", css: "epique" },
+    { id: "golem_neige", name: "Golem de Neige", rarity: "Épique", color: "#8E44AD", image: "images/Golem de Neige.png", css: "epique" },
+    { id: "phantom", name: "Phantom", rarity: "Épique", color: "#8E44AD", image: "images/Phantom.png", css: "epique", batch: 2 },
+    { id: "cheval_squelette", name: "Cheval Squelette", rarity: "Épique", color: "#8E44AD", image: "images/Cheval Squelette.png", css: "epique", batch: 2 },
+    { id: "zombie_momifie", name: "Zombie Momifié", rarity: "Épique", color: "#8E44AD", image: "images/Zombie Momifié.png", css: "epique", batch: 2 },
+    { id: "gardien", name: "Gardien", rarity: "Épique", color: "#8E44AD", image: "images/Gardien.png", css: "epique", batch: 3 },
+    { id: "grenouille", name: "Grenouille", rarity: "Épique", color: "#8E44AD", image: "images/Grenouille.png", css: "epique", batch: 3 },
+    { id: "shulker", name: "Shulker", rarity: "Épique", color: "#8E44AD", image: "images/Shulker.png", css: "epique", batch: 4 },
+    { id: "zombie_villageois", name: "Zombie Villageois", rarity: "Épique", color: "#8E44AD", image: "images/Zombie Villageois.png", css: "epique", batch: 4 },
 
     // Rares
-    { id: "tatou", name: "Tatou", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Tatou.png", css: "rare" },
-    { id: "vindicateur", name: "Vindicateur", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Vindicator.png", css: "rare" },
-    { id: "ours_polaire", name: "Ours Polaire", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/OursPolaire.png", css: "rare" },
-    { id: "piglin", name: "Piglin", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Piglin.png", css: "rare" },
-    { id: "pillard", name: "Pillard", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Pillager.png", css: "rare" },
-    { id: "champimeuh", name: "Champimeuh", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/VacheChampi.png", css: "rare" },
-    { id: "strider", name: "Strider", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Strider.png", css: "rare" },
-    { id: "axolotl", name: "Axolotl", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Axolotl.png", css: "rare" },
-    { id: "ghast", name: "Ghast", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Ghast.png", css: "rare" },
-    { id: "hoglin", name: "Hoglin", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Hoglin.png", css: "rare" },
-    { id: "renifleur", name: "Renifleur", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Renifleur.png", css: "rare" },
-    { id: "slime", name: "Slime", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Slime.png", css: "rare" },
-    { id: "squelette", name: "Squelette", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Squelette.png", css: "rare" },
-    { id: "lama_marchand", name: "Lama de Marchand", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Lama de Marchand.png", css: "rare" },
-    { id: "embourbe", name: "Embourbé", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Embourbé.png", css: "rare" },
-    { id: "zoglin", name: "Zoglin", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Zoglin.png", css: "rare", batch: 2 },
-    { id: "zombie", name: "Zombie", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Zombie.png", css: "rare", batch: 2 },
-    { id: "dauphin", name: "Dauphin", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Dauphin.png", css: "rare", batch: 2 },
-    { id: "dromadaire", name: "Dromadaire", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Dromadaire.png", css: "rare", batch: 2 },
-    { id: "piglin_zombifie", name: "Piglin Zombifié", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Piglin Zombifié.png", css: "rare", batch: 3 },
-    { id: "vagabond", name: "Vagabond", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Vagabond.png", css: "rare", batch: 3 },
-    { id: "tortue", name: "Tortue", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Tortue.png", css: "rare", batch: 3 },
-    { id: "araignee_venimeuse", name: "Araignée Venimeuse", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Araignée Venimeuse.png", css: "rare", batch: 3 },
-    { id: "ghast_joyeux", name: "Ghast Joyeux", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Ghast Joyeux.png", css: "rare", batch: 4 },
-    { id: "noye", name: "Noyé", rarity: "Rare", chance: 1.32, color: "#27AE60", image: "images/Noyé.png", css: "rare", batch: 4 },
+    { id: "tatou", name: "Tatou", rarity: "Rare", color: "#27AE60", image: "images/Tatou.png", css: "rare" },
+    { id: "vindicateur", name: "Vindicateur", rarity: "Rare", color: "#27AE60", image: "images/Vindicator.png", css: "rare" },
+    { id: "ours_polaire", name: "Ours Polaire", rarity: "Rare", color: "#27AE60", image: "images/OursPolaire.png", css: "rare" },
+    { id: "piglin", name: "Piglin", rarity: "Rare", color: "#27AE60", image: "images/Piglin.png", css: "rare" },
+    { id: "pillard", name: "Pillard", rarity: "Rare", color: "#27AE60", image: "images/Pillager.png", css: "rare" },
+    { id: "champimeuh", name: "Champimeuh", rarity: "Rare", color: "#27AE60", image: "images/VacheChampi.png", css: "rare" },
+    { id: "strider", name: "Strider", rarity: "Rare", color: "#27AE60", image: "images/Strider.png", css: "rare" },
+    { id: "axolotl", name: "Axolotl", rarity: "Rare", color: "#27AE60", image: "images/Axolotl.png", css: "rare" },
+    { id: "ghast", name: "Ghast", rarity: "Rare", color: "#27AE60", image: "images/Ghast.png", css: "rare" },
+    { id: "hoglin", name: "Hoglin", rarity: "Rare", color: "#27AE60", image: "images/Hoglin.png", css: "rare" },
+    { id: "renifleur", name: "Renifleur", rarity: "Rare", color: "#27AE60", image: "images/Renifleur.png", css: "rare" },
+    { id: "slime", name: "Slime", rarity: "Rare", color: "#27AE60", image: "images/Slime.png", css: "rare" },
+    { id: "squelette", name: "Squelette", rarity: "Rare", color: "#27AE60", image: "images/Squelette.png", css: "rare" },
+    { id: "lama_marchand", name: "Lama de Marchand", rarity: "Rare", color: "#27AE60", image: "images/Lama de Marchand.png", css: "rare" },
+    { id: "embourbe", name: "Embourbé", rarity: "Rare", color: "#27AE60", image: "images/Embourbé.png", css: "rare" },
+    { id: "zoglin", name: "Zoglin", rarity: "Rare", color: "#27AE60", image: "images/Zoglin.png", css: "rare", batch: 2 },
+    { id: "zombie", name: "Zombie", rarity: "Rare", color: "#27AE60", image: "images/Zombie.png", css: "rare", batch: 2 },
+    { id: "dauphin", name: "Dauphin", rarity: "Rare", color: "#27AE60", image: "images/Dauphin.png", css: "rare", batch: 2 },
+    { id: "dromadaire", name: "Dromadaire", rarity: "Rare", color: "#27AE60", image: "images/Dromadaire.png", css: "rare", batch: 2 },
+    { id: "piglin_zombifie", name: "Piglin Zombifié", rarity: "Rare", color: "#27AE60", image: "images/Piglin Zombifié.png", css: "rare", batch: 3 },
+    { id: "vagabond", name: "Vagabond", rarity: "Rare", color: "#27AE60", image: "images/Vagabond.png", css: "rare", batch: 3 },
+    { id: "tortue", name: "Tortue", rarity: "Rare", color: "#27AE60", image: "images/Tortue.png", css: "rare", batch: 3 },
+    { id: "araignee_venimeuse", name: "Araignée Venimeuse", rarity: "Rare", color: "#27AE60", image: "images/Araignée Venimeuse.png", css: "rare", batch: 3 },
+    { id: "ghast_joyeux", name: "Ghast Joyeux", rarity: "Rare", color: "#27AE60", image: "images/Ghast Joyeux.png", css: "rare", batch: 4 },
+    { id: "noye", name: "Noyé", rarity: "Rare", color: "#27AE60", image: "images/Noyé.png", css: "rare", batch: 4 },
 
     // Communes
-    { id: "abeille", name: "Abeille", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Abeille.png", css: "commune" },
-    { id: "ocelot", name: "Ocelot", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Ocelot.png", css: "commune" },
-    { id: "poulpe", name: "Poulpe", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Poulpe.png", css: "commune" },
-    { id: "renard", name: "Renard", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Renard.png", css: "commune" },
-    { id: "vache", name: "Vache", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/vache.png", css: "commune" },
-    { id: "ane", name: "Âne", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Ane.png", css: "commune" },
-    { id: "chauve_souris", name: "Chauve-souris", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/chauve souris.png", css: "commune" },
-    { id: "cheval", name: "Cheval", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Cheval.png", css: "commune" },
-    { id: "cochon", name: "Cochon", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/cochon.png", css: "commune" },
-    { id: "lapin", name: "Lapin", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Lapin.png", css: "commune" },
-    { id: "mouton", name: "Mouton", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Mouton.png", css: "commune" },
-    { id: "perroquet", name: "Perroquet", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Perroquet.png", css: "commune" },
-    { id: "poule", name: "Poule", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/poule.png", css: "commune" },
-    { id: "poisson_tropical", name: "Poisson Tropical", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/TropicalFish.png", css: "commune" },
-    { id: "chat", name: "Chat", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Chat.png", css: "commune" },
-    { id: "poisson_globe", name: "Poisson Globe", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Poisson Globe.png", css: "commune" },
-    { id: "endermite", name: "Endermite", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Endermite.png", css: "commune" },
-    { id: "araignee", name: "Araignée", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Araignée.png", css: "commune", batch: 2 },
-    { id: "chevre", name: "Chèvre", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Chèvre.png", css: "commune", batch: 2 },
-    { id: "tetard", name: "Têtard", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Têtard.png", css: "commune", batch: 2 },
-    { id: "silverfish", name: "Silverfish", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Silverfish.png", css: "commune", batch: 2 },
-    { id: "mule", name: "Mule", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Mule.png", css: "commune", batch: 2 },
-    { id: "saumon", name: "Saumon", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Saumon.png", css: "commune", batch: 3 },
-    { id: "lama", name: "Lama", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Lama.png", css: "commune", batch: 4 },
-    { id: "loup", name: "Loup", rarity: "Commune", chance: 2.66, color: "#5DADE2", image: "images/Loup.png", css: "commune", batch: 4 },
+    { id: "abeille", name: "Abeille", rarity: "Commune", color: "#5DADE2", image: "images/Abeille.png", css: "commune" },
+    { id: "ocelot", name: "Ocelot", rarity: "Commune", color: "#5DADE2", image: "images/Ocelot.png", css: "commune" },
+    { id: "poulpe", name: "Poulpe", rarity: "Commune", color: "#5DADE2", image: "images/Poulpe.png", css: "commune" },
+    { id: "renard", name: "Renard", rarity: "Commune", color: "#5DADE2", image: "images/Renard.png", css: "commune" },
+    { id: "vache", name: "Vache", rarity: "Commune", color: "#5DADE2", image: "images/vache.png", css: "commune" },
+    { id: "ane", name: "Âne", rarity: "Commune", color: "#5DADE2", image: "images/Ane.png", css: "commune" },
+    { id: "chauve_souris", name: "Chauve-souris", rarity: "Commune", color: "#5DADE2", image: "images/chauve souris.png", css: "commune" },
+    { id: "cheval", name: "Cheval", rarity: "Commune", color: "#5DADE2", image: "images/Cheval.png", css: "commune" },
+    { id: "cochon", name: "Cochon", rarity: "Commune", color: "#5DADE2", image: "images/cochon.png", css: "commune" },
+    { id: "lapin", name: "Lapin", rarity: "Commune", color: "#5DADE2", image: "images/Lapin.png", css: "commune" },
+    { id: "mouton", name: "Mouton", rarity: "Commune", color: "#5DADE2", image: "images/Mouton.png", css: "commune" },
+    { id: "perroquet", name: "Perroquet", rarity: "Commune", color: "#5DADE2", image: "images/Perroquet.png", css: "commune" },
+    { id: "poule", name: "Poule", rarity: "Commune", color: "#5DADE2", image: "images/poule.png", css: "commune" },
+    { id: "poisson_tropical", name: "Poisson Tropical", rarity: "Commune", color: "#5DADE2", image: "images/TropicalFish.png", css: "commune" },
+    { id: "chat", name: "Chat", rarity: "Commune", color: "#5DADE2", image: "images/Chat.png", css: "commune" },
+    { id: "poisson_globe", name: "Poisson Globe", rarity: "Commune", color: "#5DADE2", image: "images/Poisson Globe.png", css: "commune" },
+    { id: "endermite", name: "Endermite", rarity: "Commune", color: "#5DADE2", image: "images/Endermite.png", css: "commune" },
+    { id: "araignee", name: "Araignée", rarity: "Commune", color: "#5DADE2", image: "images/Araignée.png", css: "commune", batch: 2 },
+    { id: "chevre", name: "Chèvre", rarity: "Commune", color: "#5DADE2", image: "images/Chèvre.png", css: "commune", batch: 2 },
+    { id: "tetard", name: "Têtard", rarity: "Commune", color: "#5DADE2", image: "images/Têtard.png", css: "commune", batch: 2 },
+    { id: "silverfish", name: "Silverfish", rarity: "Commune", color: "#5DADE2", image: "images/Silverfish.png", css: "commune", batch: 2 },
+    { id: "mule", name: "Mule", rarity: "Commune", color: "#5DADE2", image: "images/Mule.png", css: "commune", batch: 2 },
+    { id: "saumon", name: "Saumon", rarity: "Commune", color: "#5DADE2", image: "images/Saumon.png", css: "commune", batch: 3 },
+    { id: "lama", name: "Lama", rarity: "Commune", color: "#5DADE2", image: "images/Lama.png", css: "commune", batch: 4 },
+    { id: "loup", name: "Loup", rarity: "Commune", color: "#5DADE2", image: "images/Loup.png", css: "commune", batch: 4 },
 ];
 
+// Chance globale de chaque rareté (doit refléter RARITY_CHANCES côté bot).
 const RARITIES = [
-    { name: "Commune", css: "commune", color: "#5DADE2", totalChance: "58.5%" },
-    { name: "Rare", css: "rare", color: "#27AE60", totalChance: "25.0%" },
-    { name: "Épique", css: "epique", color: "#8E44AD", totalChance: "14.4%" },
-    { name: "Légendaire", css: "legendaire", color: "#E07B00", totalChance: "2.0%" },
-    { name: "Mythique", css: "mythique", color: "#E24D44", totalChance: "0.1%" },
+    { name: "Commune", css: "commune", color: "#5DADE2", totalChance: 58.5 },
+    { name: "Rare", css: "rare", color: "#27AE60", totalChance: 25.0 },
+    { name: "Épique", css: "epique", color: "#8E44AD", totalChance: 14.4 },
+    { name: "Légendaire", css: "legendaire", color: "#E07B00", totalChance: 2.0 },
+    { name: "Mythique", css: "mythique", color: "#E24D44", totalChance: 0.1 },
 ];
+
+// Le bot tire d'abord une rareté, puis une carte au hasard dans cette rareté :
+// la chance par carte se déduit donc du nombre de cartes de la rareté. On la
+// calcule au lieu de la figer, sinon toutes les valeurs deviennent fausses dès
+// qu'une carte est ajoutée.
+const CARD_CHANCE = {};
+RARITIES.forEach(r => {
+    const n = CARDS.filter(c => c.css === r.css).length;
+    CARD_CHANCE[r.css] = n ? r.totalChance / n : 0;
+});
+
+function cardChance(card) {
+    return CARD_CHANCE[card.css].toFixed(2);
+}
 
 function renderCards(filter = 'all') {
     const container = document.getElementById('cards-container');
@@ -625,7 +663,7 @@ function renderCards(filter = 'all') {
             <div class="rarity-header">
                 <div class="rarity-badge" style="background: ${rarity.color}; box-shadow: 0 0 10px ${rarity.color}"></div>
                 <h2>${rarity.name}</h2>
-                <span class="rarity-info">${cards.length} cartes &bull; ${rarity.totalChance} de drop</span>
+                <span class="rarity-info">${cards.length} cartes &bull; ${rarity.totalChance.toFixed(1)}% de drop &bull; ${CARD_CHANCE[rarity.css].toFixed(2)}% par carte</span>
             </div>
             <div class="cards-grid">
                 ${cards.map(card => `
@@ -634,7 +672,7 @@ function renderCards(filter = 'all') {
                         <div class="card-info">
                             <div class="card-name">${card.name}</div>
                             <div class="card-rarity">${card.rarity}</div>
-                            <div class="card-chance">${card.chance.toFixed(2)}% par carte</div>
+                            <div class="card-chance">${cardChance(card)}% par carte</div>
                             ${card.batch === 4 ? '<span class="badge-new">Nouveau</span>' : card.batch === 3 ? '<span class="badge-recent">Récent</span>' : ''}
                         </div>
                     </div>
@@ -658,7 +696,7 @@ function openModal(cardId) {
     document.getElementById('modal-name').textContent = card.name;
     document.getElementById('modal-rarity').textContent = card.rarity;
     document.getElementById('modal-rarity').style.color = card.color;
-    document.getElementById('modal-chance').textContent = card.chance.toFixed(2) + '% de chance de drop';
+    document.getElementById('modal-chance').textContent = cardChance(card) + '% de chance de drop';
     document.getElementById('modal').classList.add('active');
 }
 
@@ -672,6 +710,8 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.getElementById('modal').classList.remove('active');
 });
 
+document.getElementById('stat-total').textContent = CARDS.length;
+document.getElementById('stat-rarities').textContent = RARITIES.length;
 renderCards();
 </script>
 
