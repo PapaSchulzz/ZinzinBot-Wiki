@@ -153,7 +153,25 @@
 
         .podium-medal {
             font-size: 3rem;
+            line-height: 1;
             margin-bottom: 10px;
+        }
+
+        /* Médailles : textures 16×16 du resource pack, affichées à une échelle
+           entière (×2 en liste, ×4 sur le podium). Un facteur non entier
+           donnerait des pixels de largeurs inégales avec image-rendering. */
+        .medal-icon {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+            object-fit: contain;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .podium-medal .medal-icon {
+            width: 64px;
+            height: 64px;
         }
 
         .podium-avatar {
@@ -587,7 +605,12 @@
 const BOT_BASE_URL = "https://discord-bot-production-92aa.up.railway.app";
 const API_URL = `${BOT_BASE_URL}/leaderboard`;
 
-const MEDALS = ["💎", "⭐", "🪨"];
+// Médailles par rang : 1er / 2e / 3e.
+const MEDALS = [
+    '<img class="medal-icon" src="images/ui/medal-1.png" alt="1er">',
+    '<img class="medal-icon" src="images/ui/medal-2.png" alt="2e">',
+    '<img class="medal-icon" src="images/ui/medal-3.png" alt="3e">',
+];
 let _topData = [], _totalCards = 38, _rarityMax = {};
 
 function getRarityVal(p, key) {
@@ -687,7 +710,7 @@ async function loadLeaderboard() {
             const defaultAvatar = "https://cdn.discordapp.com/embed/avatars/0.png";
             podium.innerHTML = podiumOrder.map((p, i) => `
                 <div class="podium-place">
-                    <div class="podium-medal">${["🥈","🥇","🥉"][i]}</div>
+                    <div class="podium-medal">${MEDALS[[1, 0, 2][i]]}</div>
                     <div class="podium-block" style="
                         background: linear-gradient(180deg, ${colors[i].bg}0.3) 0%, ${colors[i].bg}0.05) 100%);
                         border: 2px solid ${colors[i].border};
