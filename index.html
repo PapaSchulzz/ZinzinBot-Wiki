@@ -161,17 +161,26 @@
             margin-left: auto;
         }
 
-        /* Icônes de section : textures Minecraft 16-18px, à garder nettes */
+        /* Icônes de section : textures Minecraft affichées à l'échelle ×2 exacte.
+           Un facteur non entier (×1,5) donnerait des pixels de largeurs
+           inégales, donc une icône qui paraît déformée. La taille dépend donc
+           de la source : 18px → 36px, 16px → 32px. */
         .section-icon {
-            width: 1.5em;
-            height: 1.5em;
-            vertical-align: -0.35em;
-            margin-right: 4px;
-            /* Les textures sont carrees, mais contain garantit qu'une icone
-               non-carree serait mise a l'echelle au lieu d'etre etiree. */
+            width: 36px;
+            height: 36px;
+            vertical-align: middle;
+            margin-right: 6px;
+            /* Les textures sont carrées, mais contain garantit qu'une icône
+               non-carrée serait mise à l'échelle au lieu d'être étirée. */
             object-fit: contain;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+        }
+
+        /* Source 16×16 (textures d'items) */
+        .section-icon.src-16 {
+            width: 32px;
+            height: 32px;
         }
 
         /* ── Grille de cartes ── */
@@ -506,7 +515,7 @@
     </div>
 
     <div style="max-width: 800px; margin: 20px auto 0; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-align: left; line-height: 1.6;">
-        <h3 style="margin: 0 0 10px 0; color: #e67e22;"><img class="section-icon" src="images/ui/icon-ward-trim.png" alt=""> Le pack quotidien (<code>/ouvrir</code>)</h3>
+        <h3 style="margin: 0 0 10px 0; color: #e67e22;"><img class="section-icon src-16" src="images/ui/icon-ward-trim.png" alt=""> Le pack quotidien (<code>/ouvrir</code>)</h3>
         <ul style="margin: 0 0 10px 0; padding-left: 20px;">
             <li><strong>3 cartes par jour</strong> (parfois 4, voir plus haut), une seule ouverture par jour.</li>
             <li>Les packs se rechargent <strong>chaque jour à minuit</strong>, heure de Paris.</li>
