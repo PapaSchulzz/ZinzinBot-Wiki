@@ -167,6 +167,9 @@
             height: 1.5em;
             vertical-align: -0.35em;
             margin-right: 4px;
+            /* Les textures sont carrees, mais contain garantit qu'une icone
+               non-carree serait mise a l'echelle au lieu d'etre etiree. */
+            object-fit: contain;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
