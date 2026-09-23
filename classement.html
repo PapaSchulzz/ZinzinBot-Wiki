@@ -388,6 +388,23 @@
             gap: 10px;
         }
 
+        /* Icônes de titre : textures du resource pack à l'échelle ×2 exacte.
+           Le h2 est en flex align-items:center, donc rien à caler à la main. */
+        .h2-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            object-fit: contain;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Source 14×14 (sprites d'interface) */
+        .h2-icon.src-14 {
+            width: 28px;
+            height: 28px;
+        }
+
         /* ── Commande Discord ── */
         .command-box {
             background: #1a1a1a;
@@ -553,7 +570,7 @@
 
     <!-- Commandes -->
     <div class="info-section">
-        <h2><span class="icon">📖</span> Commandes utiles</h2>
+        <h2><img class="h2-icon src-14" src="images/ui/icon-news.png" alt=""> Commandes utiles</h2>
         <div class="command-box">
             <div class="command-slash">/</div>
             <div class="command-info">
@@ -572,7 +589,7 @@
 
     <!-- Astuces -->
     <div class="info-section">
-        <h2><span class="icon">⛏️</span> Astuces pour monter au classement</h2>
+        <h2><img class="h2-icon" src="images/ui/icon-slime-egg.png" alt=""> Astuces pour monter au classement</h2>
         <div class="tips-grid">
             <div class="tip-card">
                 <div class="tip-number">1</div>
